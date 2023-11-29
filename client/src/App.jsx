@@ -10,7 +10,7 @@ export default function App() {
   return (
     <div>
       <Header/>
-      <div className='px-[70px]'>
+      <div className='md:px-[100px] px-[20px]'>
     <Routes>
       <Route path='/' element={<Home/>}/>
       <Route path='/about' element={<About/>}/>
