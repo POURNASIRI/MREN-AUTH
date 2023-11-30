@@ -20,8 +20,8 @@ dotenv.config()
     
     
  app.use(express.json())
- app.use('/user', userRoutes)
- app.use('/signup', signupRoutes)
+ app.use('/api/user', userRoutes)
+ app.use('/api/signup', signupRoutes)
 
 
  app.use((err,req,res,next)=>{

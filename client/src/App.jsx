@@ -5,10 +5,12 @@ import SignUp from './pages/SignUp'
 import Profile from './pages/Profile'
 import Home from './pages/Home'
 import Header from './components/Header'
+import  { Toaster } from 'react-hot-toast';
 
 export default function App() {
   return (
     <div>
+       <Toaster />
       <Header/>
       <div className='md:px-[100px] px-[20px]'>
     <Routes>
