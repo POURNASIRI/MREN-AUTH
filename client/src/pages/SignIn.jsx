@@ -1,14 +1,20 @@
 import React, { useState } from 'react'
 import Loader from '../components/Loader'
 import { Link, useNavigate } from 'react-router-dom'
+import {useDispatch,useSelector} from 'react-redux'
+import { signInStart, signInSuccess, signInUnSuccess } from '../redux/user/userSlice'
+import toast from 'react-hot-toast'
 
 function SignIn() {
 
         const[formData,setFormData] = useState({})
-        const[loading,setLoading] = useState(false)
-        const[error,setError] = useState(false)
+        // const[loading,setLoading] = useState(false)
+        // const[error,setError] = useState(false)
+        const {currentUser,loading,error} = useSelector(state=>state.user)
         const router = useNavigate()
-
+        const dispatch = useDispatch()
+     
+        
 
         const handleChange = (e)=>{
             setFormData({...formData, [e.target.id]:e.target.value})
@@ -19,7 +25,7 @@ function SignIn() {
           if(!formData.email || !formData.password) return;
 
           try {
-            setLoading(true)
+            dispatch(signInStart())
             const res = await fetch("/api/auth/signin",{
               method:"POST",
               headers:{
@@ -28,15 +34,17 @@ function SignIn() {
               body:JSON.stringify(formData)
             })
             const data = await res.json()
-            setLoading(false) 
             if(data.succsess === false){
-              setError(true)
+              toast.error(data.message)
+              dispatch(signInUnSuccess())
             }else{
+              dispatch(signInSuccess(data))
               router('/')
             }
             
           } catch (error) {
-            
+            toast.error(error.message)
+           
           }
         }
 
@@ -66,11 +74,6 @@ function SignIn() {
       transition-opacity mb-2'
        onChange={handleChange} 
       />
-      <span className='text-red-600 font-bold text-sm'>
-       { 
-          error && "Something Wrong please try again!"
-        }
-      </span>
       <button
       type='submit'
       className='bg-blue-700 
