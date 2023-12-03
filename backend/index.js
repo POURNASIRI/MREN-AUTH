@@ -17,9 +17,10 @@ dotenv.config()
  app.listen(3000, ()=>{
      console.log("Server Listening on port 3000 ")
     })
-    
+
     
  app.use(express.json())
+
  app.use('/api/user', userRoutes)
  app.use('/api/auth', authRoutes)
 

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Loader from '../components/Loader'
 import {useNavigate } from 'react-router-dom'
+import OtherAuth from '../components/OtherAuth'
 
 export default function SignUp() {
 
@@ -94,13 +95,7 @@ export default function SignUp() {
        
        Sign up
       </button>
-      <button 
-      type='submit'
-      className='bg-red-700
-      hover:opacity-80
-       uppercase text-white w-full p-3 rounded-lg text-lg mt-2'>
-         with Google Account
-      </button>
+     <OtherAuth/>
       </form>
       <span >
         Have you an account? 

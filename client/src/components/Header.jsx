@@ -7,7 +7,6 @@ const links = [
 
     {name:"About", path:"/about"},
     {name:"signin", path:"/sign-in"},
-    {name:"signup", path:"/sign-up"},
     {name:"Profile", path:"/Profile"},
 ]
 
