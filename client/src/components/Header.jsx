@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react"
 import { Link } from "react-router-dom"
+import { useSelector } from "react-redux"
 
 
 
@@ -12,7 +13,7 @@ const links = [
 
 function Header() {
 
-
+        const {currentUser} = useSelector(state=>state.user)
         const[menu, setMenu] = useState(false)
 
         const handleMenu = useCallback(()=>{
@@ -32,19 +33,33 @@ function Header() {
     authentication
     </h1>
     <div className="md:flex hidden">
-    {
-      links.map(link=>(
+  
           <ul
-           className=" px-2 italic font-bold text-lg my-10 " 
-          key={link.name}>
+           className=" items-center px-2 italic font-bold text-lg my-10 flex gap-4 " 
+          >
             <li>
-              <Link to={link.path}>
-              {link.name}
+              <Link to={"about"}>
+              About
               </Link>
             </li>
+            {
+              currentUser ?
+              <li>
+              <Link to={"profile"}>
+                <div className="flex items-center gap-3">
+                <img className="w-[40px] h-[40px] rounded-full" 
+                src={currentUser.profilePhoto} alt="" />
+                  <p className="text-xs">{currentUser.username}</p>
+                </div>
+              </Link>
+            </li> : 
+             <li>
+             <Link to={"/sign-in"}>
+             signin
+             </Link>
+           </li>
+            }
           </ul>
-          ))
-        }
     </div>
     <button
         onClick={handleMenu} 
