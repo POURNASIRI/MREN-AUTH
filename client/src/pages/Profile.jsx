@@ -50,9 +50,6 @@ function Profile() {
         }
       )
   }
-
- 
-
   // upload image to firebase Storage functionality
  
   return (
@@ -65,7 +62,7 @@ function Profile() {
         onChange={(e)=>setImage(e.target.files[0])}/>
         <img className='w-[60px] h-[60px] 
         rounded-full self-center my-5 cursor-pointer' 
-        src={currentUser.profilePhoto} alt="" 
+        src={formData.profilePicture || currentUser.profilePhoto} alt="" 
         onClick={()=>refFile.current.click()}
         />
 
