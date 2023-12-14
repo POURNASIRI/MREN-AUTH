@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../components/Loader'
 import { useRef } from 'react'
 import {
@@ -9,6 +9,10 @@ import {
   uploadBytesResumable,
 } from 'firebase/storage';
 import { app } from '../firebase'
+import { updateUserStart, updateUserSuccess, updateUserUnSuccess } from '../redux/user/userSlice';
+import toast from 'react-hot-toast';
+import {useNavigate} from 'react-router-dom'
+
 
 
 function Profile() {
@@ -18,12 +22,20 @@ function Profile() {
   const[imageError,setImageError] = useState(false)
   const [imagePercent, setImagePercent] = useState(0);
   const [formData,setFormData] = useState({})
+  const[updateSuccess,setUpdateSuccess] = useState(false)
+  const navigate = useNavigate()
+
+  
+      const dispatch = useDispatch()
 
   useEffect(()=>{
     if(image){
       handleFileUpload(image)
     }
   },[image])
+
+  const id = currentUser._id
+ 
 
   // upload image to firebase Storage functionality
 
@@ -32,7 +44,6 @@ function Profile() {
       const fileName = new Date().getTime() + image?.name;
       const storageRef = ref(storage,fileName)
       const uploadTask = uploadBytesResumable(storageRef,image)
-
       uploadTask.on(
         'state_changed',
         (snapshot) => {
@@ -45,24 +56,67 @@ function Profile() {
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
-            setFormData({ ...formData, profilePicture: downloadURL })
+            setFormData({ ...formData, profilePhoto: downloadURL })
           );
         }
       )
   }
   // upload image to firebase Storage functionality
  
+
+
+    const handleChange = (e)=>{
+      setFormData({...formData,[e.target.id]:e.target.value})
+    }
+
+    const handleSubmit = async(e)=>{
+      e.preventDefault()
+      try {
+        dispatch(updateUserStart())
+        const res = await fetch(`/api/user/update/${id}`,{
+          method:"POST",
+          headers:{
+            "Content-Type": "application/json"
+          },
+          body:JSON.stringify(formData)
+        })
+
+        const data = await res.json()
+        console.log(data)
+        if(data.succsess === false){
+          toast.error(data.message)
+          setTimeout(() => {
+            navigate('/sign-in')
+          }, 1000);
+          return
+        }else{
+          dispatch(updateUserSuccess(data))
+          setUpdateSuccess(true)
+          setTimeout(() => {
+            setUpdateSuccess(false)
+          },1000);
+
+        }
+      } catch (error) {
+        dispatch(updateUserUnSuccess(error.message))
+      }
+    }
+
+
+   
+   
+    
   return (
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl capitalize font-semibold text-center mt-[40px]'>
         profile
       </h1>
-      <form className='flex flex-col gap-4'>
+      <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
         <input type="file" ref={refFile} hidden accept='image/*' 
         onChange={(e)=>setImage(e.target.files[0])}/>
         <img className='w-[60px] h-[60px] 
         rounded-full self-center my-5 cursor-pointer' 
-        src={formData.profilePicture || currentUser.profilePhoto} alt="" 
+        src={formData.profilePhoto|| currentUser.profilePhoto} alt="" 
         onClick={()=>refFile.current.click()}
         />
 
@@ -85,11 +139,11 @@ function Profile() {
 
 
 
-        <input defaultValue={currentUser.username} type="text" id='username' placeholder='Username'
+        <input onChange={handleChange} defaultValue={currentUser.username} type="text" id='username' placeholder='Username'
         className='bg-slate-100 rounded-lg p-3 outline-none' />
-        <input defaultValue={currentUser.email}  type="email" id='email' placeholder='Email'
+        <input onChange={handleChange} defaultValue={currentUser.email}  type="email" id='email' placeholder='Email'
         className='bg-slate-100 rounded-lg p-3 outline-none' />
-        <input type="password" id='password' placeholder='Password'
+        <input onChange={handleChange} type="password" id='password' placeholder='Password'
         className='bg-slate-100 rounded-lg p-3 outline-none' />
       <button
       type='submit'
@@ -103,6 +157,10 @@ function Profile() {
        } 
         Update
       </button>
+      {
+        updateSuccess && 
+        <h2 className='text-center text-green-600 font-semibold text-sm'>Profile Update Successed</h2>
+      }
       </form>
       <div className='flex justify-between my-4'>
         <button className='py-2
