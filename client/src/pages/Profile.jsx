@@ -9,7 +9,7 @@ import {
   uploadBytesResumable,
 } from 'firebase/storage';
 import { app } from '../firebase'
-import { updateUserStart, updateUserSuccess, updateUserUnSuccess } from '../redux/user/userSlice';
+import { deleteUserStart, deleteUserSuccess, deleteUserUnSuccess, updateUserStart, updateUserSuccess, updateUserUnSuccess } from '../redux/user/userSlice';
 import toast from 'react-hot-toast';
 import {useNavigate} from 'react-router-dom'
 
@@ -103,6 +103,25 @@ function Profile() {
     }
 
 
+    const handleDeleteAccount = async()=>{
+          try {
+            dispatch(deleteUserStart())
+            const res = await fetch(`/api/user/delete/${id}`,{
+              method:"DELETE"
+            })
+            const data = await res.json()
+            if(data.succsess === false){
+              toast.error(data.message)
+              return;
+            }
+            dispatch(deleteUserSuccess())
+            
+          } catch (error) {
+            dispatch(deleteUserUnSuccess(error.message))
+          }
+    }
+
+
    
    
     
@@ -163,7 +182,9 @@ function Profile() {
       }
       </form>
       <div className='flex justify-between my-4'>
-        <button className='py-2
+        <button
+        onClick={handleDeleteAccount} 
+        className='py-2
          bg-red-700 px-3 rounded-md text-white hover:shadow-lg 
          text-sm font-semibold hover:scale-105 transition-all '>Delete Account</button>
         <button className='py-2 bg-red-700 px-3 
