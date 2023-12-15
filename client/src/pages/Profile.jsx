@@ -9,7 +9,7 @@ import {
   uploadBytesResumable,
 } from 'firebase/storage';
 import { app } from '../firebase'
-import { deleteUserStart, deleteUserSuccess, deleteUserUnSuccess, updateUserStart, updateUserSuccess, updateUserUnSuccess } from '../redux/user/userSlice';
+import { deleteUserStart, deleteUserSuccess, deleteUserUnSuccess, signout, updateUserStart, updateUserSuccess, updateUserUnSuccess } from '../redux/user/userSlice';
 import toast from 'react-hot-toast';
 import {useNavigate} from 'react-router-dom'
 
@@ -122,6 +122,16 @@ function Profile() {
     }
 
 
+    const handleSignout = async ()=>{
+          try {
+            await fetch('/api/auth/signout')
+            dispatch(signout())
+          } catch (error) {
+            
+          }
+    }
+
+
    
    
     
@@ -187,7 +197,9 @@ function Profile() {
         className='py-2
          bg-red-700 px-3 rounded-md text-white hover:shadow-lg 
          text-sm font-semibold hover:scale-105 transition-all '>Delete Account</button>
-        <button className='py-2 bg-red-700 px-3 
+        <button 
+        onClick={handleSignout}
+        className='py-2 bg-red-700 px-3 
         rounded-md text-white hover:scale-105 transition-all 
         text-sm font-semibold'>Sign out</button>
       </div>
