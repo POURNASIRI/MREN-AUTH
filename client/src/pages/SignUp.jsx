@@ -95,7 +95,6 @@ export default function SignUp() {
        
        Sign up
       </button>
-     <OtherAuth/>
       </form>
       <span >
         Have you an account? 

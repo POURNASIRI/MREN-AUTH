@@ -1,6 +1,10 @@
 import { useCallback, useState } from "react"
 import { Link } from "react-router-dom"
 import { useSelector } from "react-redux"
+import { MdMenu } from "react-icons/md";
+import { IoCloseCircleSharp } from "react-icons/io5";
+
+
 
 
 
@@ -37,11 +41,23 @@ function Header() {
           <ul
            className=" items-center px-2 italic font-bold text-lg my-10 flex gap-4 " 
           >
-            <li>
-              <Link to={"about"}>
-              About
-              </Link>
-            </li>
+            {
+              currentUser && (
+                <>
+                <li>
+                <Link to={"about"}>
+                About
+                </Link>
+              </li>
+              <li>
+                <Link to={"/"}>
+                Home
+                </Link>
+              </li>
+                </>
+              )
+            }
+           
             {
               currentUser ?
               <li>
@@ -64,7 +80,7 @@ function Header() {
     <button
         onClick={handleMenu} 
         className="fixed md:hidden right-4 top-4">
-          open icon
+         <MdMenu size={30}/>
     </button>
    </div>
 
@@ -77,7 +93,7 @@ function Header() {
         <button
         onClick={handleMenu} 
         className="fixed right-1 top-1">
-          close icon
+          <IoCloseCircleSharp size={30} />
         </button>
         <Link
         onClick={handleMenu} 

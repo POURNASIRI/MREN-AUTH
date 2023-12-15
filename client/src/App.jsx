@@ -15,11 +15,11 @@ export default function App() {
       <Header/>
       <div className='md:px-[100px] px-[20px]'>
     <Routes>
-      <Route path='/' element={<Home/>}/>
-      <Route path='/about' element={<About/>}/>
       <Route path='/sign-in' element={<SignIn/>}/>
       <Route path='/sign-up' element={<SignUp/>}/>
       <Route element={<PrivateRoute/>}>
+      <Route path='/' element={<Home/>}/>
+      <Route path='/about' element={<About/>}/>
       <Route path='/Profile' element={<Profile/>}/>
       </Route>
     </Routes>

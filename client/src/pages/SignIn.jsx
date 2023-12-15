@@ -4,13 +4,12 @@ import { Link, useNavigate } from 'react-router-dom'
 import {useDispatch,useSelector} from 'react-redux'
 import { signInStart, signInSuccess, signInUnSuccess } from '../redux/user/userSlice'
 import toast from 'react-hot-toast'
+import OtherAuth from '../components/OtherAuth'
 
 function SignIn() {
 
         const[formData,setFormData] = useState({})
-        // const[loading,setLoading] = useState(false)
-        // const[error,setError] = useState(false)
-        const {currentUser,loading,error} = useSelector(state=>state.user)
+        const {loading} = useSelector(state=>state.user)
         const router = useNavigate()
         const dispatch = useDispatch()
      
@@ -86,13 +85,7 @@ function SignIn() {
        } 
        Sign In
       </button>
-      <button 
-      type='submit'
-      className='bg-red-700
-      hover:opacity-80
-       uppercase text-white w-full p-3 rounded-lg text-lg mt-2'>
-         with Google Account
-      </button>
+       <OtherAuth/>
       </form>
       <span >
         Don't Have you an account? 
